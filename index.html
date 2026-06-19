@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#6ee7b7" />
-  <title>Number Puzzle Kids</title>
+  <title>Random Games Kids</title>
   <style>
     :root{
       --bg:#fff7ed;
@@ -74,9 +74,15 @@
 <body>
   <main class="app">
     <header class="hero">
-      <div class="title"><div class="logo" aria-hidden="true">✨</div><div><h1>Number Puzzle</h1><p class="subtitle">Ad-free practice. Saved on this device.</p></div></div>
+      <div class="title"><div class="logo" aria-hidden="true">✨</div><div><h1>Random Games</h1><p class="subtitle">Ad-free practice. Saved on this device.</p></div></div>
       <div class="pill" id="todayPill">⭐ 0</div>
     </header>
+
+    <nav class="game-tabs" aria-label="Game tabs">
+      <button id="tabMath" class="tab-btn active" type="button">🧮 Math</button>
+      <button id="tabOther" class="tab-btn" type="button">🎲 Other Games</button>
+      <button id="tabDraw" class="tab-btn" type="button">🎨 Draw</button>
+    </nav>
 
     <section id="profileScreen" class="screen active">
       <div class="profile-layout">
@@ -131,6 +137,49 @@
         <div class="actions" style="margin-top:16px"><button id="clearMistakesBtn" class="btn danger" type="button">Clear evaluation data</button></div>
       </div>
     </section>
+
+
+    <section id="otherScreen" class="screen">
+      <div class="card">
+        <h2>Other games</h2>
+        <p class="helper">Placeholder area for future ad-free games. The Math and Draw tabs work now.</p>
+        <div class="other-grid">
+          <div class="coming-card"><div class="big">🔤</div><h3>Word game</h3><p>Coming later: spelling, sight words, or word puzzles.</p></div>
+          <div class="coming-card"><div class="big">🧠</div><h3>Memory game</h3><p>Coming later: matching cards and pattern practice.</p></div>
+          <div class="coming-card"><div class="big">🧩</div><h3>Logic game</h3><p>Coming later: simple kid-friendly logic puzzles.</p></div>
+          <div class="coming-card"><div class="big">🎯</div><h3>Speed practice</h3><p>Coming later: quick math facts with rewards.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="drawScreen" class="screen">
+      <div class="card">
+        <div class="level-row">
+          <div><h2>Draw</h2><p class="helper">Use a finger or mouse. Draw a simple circle, rectangle, triangle, or line, then tap Smart fix.</p></div>
+          <div class="difficulty">Local drawing only</div>
+        </div>
+        <div class="draw-layout">
+          <div class="draw-tools">
+            <div class="tool-row"><label for="strokeColor">Line color</label><input id="strokeColor" type="color" value="#60a5fa" /></div>
+            <div class="tool-row"><label for="fillColor">Fill color</label><input id="fillColor" type="color" value="#fde68a" /></div>
+            <div class="tool-row"><label for="brushSize">Brush size</label><input id="brushSize" type="range" min="3" max="28" value="8" /></div>
+            <button id="smartFixBtn" class="btn primary" type="button">✨ Smart fix shape</button>
+            <button id="fillShapeBtn" class="btn orange" type="button">🪣 Fill shape</button>
+            <button id="undoDrawBtn" class="btn blue" type="button">↩️ Undo</button>
+            <button id="clearDrawBtn" class="btn danger" type="button">Clear</button>
+            <button id="saveDrawingBtn" class="btn primary" type="button">Save drawing</button>
+            <button id="downloadDrawingBtn" class="btn purple" type="button">Download PNG</button>
+            <p class="helper">Saved drawings stay in this browser for the selected player. To save to Photos, use Download PNG and then save the image from the phone/browser.</p>
+          </div>
+          <div>
+            <div class="draw-canvas-wrap"><canvas id="drawCanvas" class="draw-canvas"></canvas></div>
+            <h3 style="margin-top:14px">Saved drawings</h3>
+            <div id="savedDrawings" class="drawing-list"><p class="empty-note">No drawings saved yet.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <div id="confetti" class="confetti" aria-hidden="true"></div>
@@ -141,7 +190,7 @@ const COOKIE_NAME='mathCrosswordKidsPocV3';
 const OLD_COOKIE_NAME='mathCrosswordKidsPocV2';
 const COOKIE_DAYS=365;
 const ICONS=['⭐','🌈','🎈','✨','🍎','🧩','🎯','🚀','🌼','☀️'];
-const els={profileScreen:byId('profileScreen'),gameScreen:byId('gameScreen'),evaluationScreen:byId('evaluationScreen'),profileForm:byId('profileForm'),kidNameInput:byId('kidNameInput'),kidList:byId('kidList'),noKids:byId('noKids'),todayPill:byId('todayPill'),playerName:byId('playerName'),timer:byId('timer'),stars:byId('stars'),score:byId('score'),levelTitle:byId('levelTitle'),levelGoal:byId('levelGoal'),difficulty:byId('difficulty'),message:byId('message'),board:byId('board'),checkBtn:byId('checkBtn'),clearBtn:byId('clearBtn'),newPuzzleBtn:byId('newPuzzleBtn'),resetLevelBtn:byId('resetLevelBtn'),speedNote:byId('speedNote'),backBtn:byId('backBtn'),evalFromGameBtn:byId('evalFromGameBtn'),evalBackBtn:byId('evalBackBtn'),evalPlayBtn:byId('evalPlayBtn'),evalPlayerPill:byId('evalPlayerPill'),evalTitle:byId('evalTitle'),evalSummary:byId('evalSummary'),insightBox:byId('insightBox'),opStats:byId('opStats'),rangeStats:byId('rangeStats'),levelHistory:byId('levelHistory'),recentMistakes:byId('recentMistakes'),clearMistakesBtn:byId('clearMistakesBtn'),modal:byId('winModal'),winStars:byId('winStars'),winCopy:byId('winCopy'),nextBtn:byId('nextBtn'),modalProfilesBtn:byId('modalProfilesBtn'),modalEvalBtn:byId('modalEvalBtn'),confetti:byId('confetti')};
+const els={profileScreen:byId('profileScreen'),gameScreen:byId('gameScreen'),evaluationScreen:byId('evaluationScreen'),profileForm:byId('profileForm'),kidNameInput:byId('kidNameInput'),kidList:byId('kidList'),noKids:byId('noKids'),todayPill:byId('todayPill'),playerName:byId('playerName'),timer:byId('timer'),stars:byId('stars'),score:byId('score'),levelTitle:byId('levelTitle'),levelGoal:byId('levelGoal'),difficulty:byId('difficulty'),message:byId('message'),board:byId('board'),checkBtn:byId('checkBtn'),clearBtn:byId('clearBtn'),newPuzzleBtn:byId('newPuzzleBtn'),resetLevelBtn:byId('resetLevelBtn'),speedNote:byId('speedNote'),backBtn:byId('backBtn'),evalFromGameBtn:byId('evalFromGameBtn'),evalBackBtn:byId('evalBackBtn'),evalPlayBtn:byId('evalPlayBtn'),evalPlayerPill:byId('evalPlayerPill'),evalTitle:byId('evalTitle'),evalSummary:byId('evalSummary'),insightBox:byId('insightBox'),opStats:byId('opStats'),rangeStats:byId('rangeStats'),levelHistory:byId('levelHistory'),recentMistakes:byId('recentMistakes'),clearMistakesBtn:byId('clearMistakesBtn'),modal:byId('winModal'),winStars:byId('winStars'),winCopy:byId('winCopy'),nextBtn:byId('nextBtn'),modalProfilesBtn:byId('modalProfilesBtn'),modalEvalBtn:byId('modalEvalBtn'),confetti:byId('confetti'),tabMath:byId('tabMath'),tabOther:byId('tabOther'),tabDraw:byId('tabDraw'),otherScreen:byId('otherScreen'),drawScreen:byId('drawScreen'),strokeColor:byId('strokeColor'),fillColor:byId('fillColor'),brushSize:byId('brushSize'),drawCanvas:byId('drawCanvas'),smartFixBtn:byId('smartFixBtn'),fillShapeBtn:byId('fillShapeBtn'),undoDrawBtn:byId('undoDrawBtn'),clearDrawBtn:byId('clearDrawBtn'),saveDrawingBtn:byId('saveDrawingBtn'),downloadDrawingBtn:byId('downloadDrawingBtn'),savedDrawings:byId('savedDrawings')};
 let state=loadState(); let activeKid=null; let puzzle=null; let timerId=null; let autoCheckTimer=null; let startMs=0; let elapsedSeconds=0; let mistakesThisRound=0; let roundSeed=0; let levelCompleteLocked=false; let lastAutoSignature='';
 function byId(id){return document.getElementById(id)}
 function setCookie(name,value,days){const maxAge=days*24*60*60;document.cookie=`${name}=${encodeURIComponent(value)}; max-age=${maxAge}; path=/; SameSite=Lax`}
@@ -156,7 +205,8 @@ function normalizeStats(s){const n=Object.assign(freshStats(),s||{}); n.byOp=n.b
 function pruneKid(k){k.stats=normalizeStats(k.stats); k.stats.recentMistakes=k.stats.recentMistakes.slice(0,60); k.stats.levelHistory=k.stats.levelHistory.slice(-80)}
 function kidTemplate(name){const id='kid_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8);return{id,name:name.trim().slice(0,20),icon:ICONS[state.kids.length%ICONS.length],level:1,totalStars:0,score:0,solved:0,bestTimes:{},lastPlayed:Date.now(),stats:freshStats(),puzzleSalt:0}}
 function getKid(id=state.activeKidId){return state.kids.find(k=>k.id===id)||null}
-function showScreen(name){els.profileScreen.classList.toggle('active',name==='profiles');els.gameScreen.classList.toggle('active',name==='game');els.evaluationScreen.classList.toggle('active',name==='evaluation')}
+function showScreen(name){els.profileScreen.classList.toggle('active',name==='profiles');els.gameScreen.classList.toggle('active',name==='game');els.evaluationScreen.classList.toggle('active',name==='evaluation');els.otherScreen.classList.toggle('active',name==='other');els.drawScreen.classList.toggle('active',name==='draw');setActiveTab(name);if(name==='draw')setTimeout(initDrawCanvas,50)}
+function setActiveTab(name){if(!els.tabMath)return;els.tabMath.classList.toggle('active',name==='profiles'||name==='game'||name==='evaluation');els.tabOther.classList.toggle('active',name==='other');els.tabDraw.classList.toggle('active',name==='draw')}
 function renderHeaderTotals(){els.todayPill.textContent=`⭐ ${state.kids.reduce((s,k)=>s+(k.totalStars||0),0)}`}
 function renderProfiles(){els.kidList.innerHTML='';els.noKids.classList.toggle('hidden',state.kids.length>0);for(const kid of state.kids){const row=document.createElement('div');row.className='kid-card';row.innerHTML=`<div class="kid-left"><div class="avatar" aria-hidden="true">${escapeHtml(kid.icon||'🧩')}</div><div><div class="kid-name">${escapeHtml(kid.name)}</div><div class="kid-meta">Level ${kid.level||1} · ⭐ ${kid.totalStars||0} · ${kid.solved||0} solved</div></div></div><div class="kid-actions"><button class="btn small primary play" type="button">Play</button><button class="btn small purple eval" type="button">Eval</button><button class="btn small danger del" type="button">Delete</button></div>`;row.querySelector('.play').addEventListener('click',()=>startGame(kid.id));row.querySelector('.eval').addEventListener('click',()=>showEvaluation(kid.id));row.querySelector('.del').addEventListener('click',()=>deleteKid(kid.id));els.kidList.appendChild(row)}renderHeaderTotals()}
 function deleteKid(kidId){const kid=getKid(kidId); if(!kid)return; const ok=confirm(`Delete ${kid.name}'s profile and all saved progress? This cannot be undone.`); if(!ok)return; state.kids=state.kids.filter(k=>k.id!==kidId); if(state.activeKidId===kidId)state.activeKidId=state.kids[0]?.id||null; activeKid=null; saveState(); renderProfiles(); showScreen('profiles')}
@@ -211,9 +261,30 @@ function pick(rng,list){return list[Math.floor(rng()*list.length)]}function rand
 function hashString(str){let h=2166136261;for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
 function mulberry32(seed){return function(){let t=seed+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
 function escapeHtml(str){return String(str).replace(/[&<>'"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]))}
+
+let drawCtx=null,drawHistory=[],drawing=false,currentStroke=[],lastShape=null,drawInitialized=false;
+function currentDrawKid(){return activeKid||getKid(state.activeKidId)||state.kids[0]||null}
+function initDrawCanvas(){const c=els.drawCanvas;if(!c)return;const rect=c.getBoundingClientRect();const dpr=window.devicePixelRatio||1;const w=Math.max(320,Math.floor(rect.width*dpr));const h=Math.max(360,Math.floor(rect.height*dpr));if(c.width!==w||c.height!==h){const old=drawCtx?c.toDataURL('image/png'):null;c.width=w;c.height=h;drawCtx=c.getContext('2d');drawCtx.setTransform(dpr,0,0,dpr,0,0);drawCtx.lineCap='round';drawCtx.lineJoin='round';drawCtx.fillStyle='#fffdf7';drawCtx.fillRect(0,0,rect.width,rect.height);if(old&&drawInitialized){const img=new Image();img.onload=()=>drawCtx.drawImage(img,0,0,rect.width,rect.height);img.src=old}else{drawHistory=[];pushDrawHistory()}}drawInitialized=true;if(!c.dataset.bound){c.dataset.bound='1';c.addEventListener('pointerdown',startDraw);c.addEventListener('pointermove',moveDraw);c.addEventListener('pointerup',endDraw);c.addEventListener('pointercancel',endDraw);window.addEventListener('resize',()=>{if(els.drawScreen.classList.contains('active'))setTimeout(initDrawCanvas,100)})}renderSavedDrawings()}
+function canvasPoint(e){const r=els.drawCanvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
+function startDraw(e){e.preventDefault();initDrawCanvas();drawing=true;currentStroke=[];const p=canvasPoint(e);currentStroke.push(p);drawCtx.beginPath();drawCtx.moveTo(p.x,p.y);drawCtx.strokeStyle=els.strokeColor.value;drawCtx.lineWidth=Number(els.brushSize.value)||8}
+function moveDraw(e){if(!drawing)return;e.preventDefault();const p=canvasPoint(e);currentStroke.push(p);drawCtx.lineTo(p.x,p.y);drawCtx.stroke()}
+function endDraw(e){if(!drawing)return;drawing=false;if(currentStroke.length>1){lastShape=detectShape(currentStroke);pushDrawHistory()}}
+function pushDrawHistory(){try{drawHistory.push(els.drawCanvas.toDataURL('image/png'));drawHistory=drawHistory.slice(-20)}catch(e){}}
+function restoreDraw(data){const c=els.drawCanvas,ctx=drawCtx,img=new Image();img.onload=()=>{ctx.clearRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.getBoundingClientRect().width,c.getBoundingClientRect().height)};img.src=data}
+function undoDraw(){if(drawHistory.length<=1)return;drawHistory.pop();restoreDraw(drawHistory[drawHistory.length-1])}
+function clearDraw(){initDrawCanvas();const r=els.drawCanvas.getBoundingClientRect();drawCtx.clearRect(0,0,r.width,r.height);drawCtx.fillStyle='#fffdf7';drawCtx.fillRect(0,0,r.width,r.height);lastShape=null;pushDrawHistory()}
+function detectShape(points){const xs=points.map(p=>p.x),ys=points.map(p=>p.y);const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);const w=maxX-minX,h=maxY-minY;const first=points[0],last=points[points.length-1];const closed=Math.hypot(first.x-last.x,first.y-last.y)<Math.max(26,Math.min(w,h)*.35);if(w<18||h<18)return{type:'line',minX,maxX,minY,maxY};if(!closed)return{type:'line',minX,maxX,minY,maxY};const ratio=w/h;if(ratio>.78&&ratio<1.22)return{type:'circle',minX,maxX,minY,maxY};if(points.length<18)return{type:'triangle',minX,maxX,minY,maxY};return{type:'rect',minX,maxX,minY,maxY}}
+function smartFixShape(fill=false){if(!lastShape)return;drawCorrectedShape(lastShape,fill);pushDrawHistory()}
+function drawCorrectedShape(shape,fill){const ctx=drawCtx;ctx.save();ctx.strokeStyle=els.strokeColor.value;ctx.fillStyle=els.fillColor.value;ctx.lineWidth=Number(els.brushSize.value)||8;ctx.lineCap='round';ctx.lineJoin='round';const pad=6;const x=shape.minX,y=shape.minY,w=shape.maxX-shape.minX,h=shape.maxY-shape.minY;ctx.beginPath();if(shape.type==='circle'){ctx.ellipse(x+w/2,y+h/2,Math.max(12,w/2-pad),Math.max(12,h/2-pad),0,0,Math.PI*2)}else if(shape.type==='triangle'){ctx.moveTo(x+w/2,y+pad);ctx.lineTo(x+pad,y+h-pad);ctx.lineTo(x+w-pad,y+h-pad);ctx.closePath()}else if(shape.type==='line'){ctx.moveTo(shape.minX,shape.minY);ctx.lineTo(shape.maxX,shape.maxY)}else{ctx.roundRect(x+pad,y+pad,Math.max(16,w-pad*2),Math.max(16,h-pad*2),12)}if(fill&&shape.type!=='line')ctx.fill();ctx.stroke();ctx.restore()}
+function saveDrawing(){initDrawCanvas();const kid=currentDrawKid();if(!kid){alert('Create or select a player first.');return}kid.drawings=kid.drawings||[];kid.drawings.unshift({data:els.drawCanvas.toDataURL('image/png'),ts:Date.now()});kid.drawings=kid.drawings.slice(0,8);state.activeKidId=kid.id;saveState();renderSavedDrawings();alert('Drawing saved for '+kid.name+'!')}
+function downloadDrawing(){initDrawCanvas();const a=document.createElement('a');a.href=els.drawCanvas.toDataURL('image/png');a.download='random-games-drawing.png';document.body.appendChild(a);a.click();a.remove()}
+function renderSavedDrawings(){if(!els.savedDrawings)return;const kid=currentDrawKid();const drawings=(kid&&kid.drawings)||[];els.savedDrawings.innerHTML='';if(!drawings.length){els.savedDrawings.innerHTML='<p class="empty-note">No drawings saved yet.</p>';return}drawings.forEach((d,i)=>{const div=document.createElement('div');div.className='drawing-thumb';div.innerHTML=`<img src="${d.data}" alt="Saved drawing ${i+1}"><button class="btn small blue" type="button" style="width:100%;margin-top:6px">Open</button>`;div.querySelector('button').addEventListener('click',()=>{initDrawCanvas();restoreDraw(d.data);pushDrawHistory()});els.savedDrawings.appendChild(div)})}
+function openMathTab(){const kid=getKid(state.activeKidId);if(kid)startGame(kid.id);else{renderProfiles();showScreen('profiles')}}
+
 els.profileForm.addEventListener('submit',e=>{e.preventDefault();const name=els.kidNameInput.value.trim();if(!name)return;const kid=kidTemplate(name);state.kids.push(kid);state.activeKidId=kid.id;els.kidNameInput.value='';saveState();renderProfiles();startGame(kid.id)});
 els.backBtn.addEventListener('click',()=>{stopTimer();renderProfiles();showScreen('profiles')});els.evalBackBtn.addEventListener('click',()=>{renderProfiles();showScreen('profiles')});els.evalPlayBtn.addEventListener('click',()=>{if(activeKid)startGame(activeKid.id)});els.evalFromGameBtn.addEventListener('click',()=>showEvaluation(activeKid?.id));els.checkBtn.addEventListener('click',checkAnswers);els.clearBtn.addEventListener('click',clearAnswers);els.newPuzzleBtn.addEventListener('click',()=>newRound(true));els.resetLevelBtn.addEventListener('click',resetActiveKid);els.clearMistakesBtn.addEventListener('click',clearEvaluationData);
 els.nextBtn.addEventListener('click',()=>{els.modal.classList.remove('show');newRound()});els.modalProfilesBtn.addEventListener('click',()=>{els.modal.classList.remove('show');stopTimer();renderProfiles();showScreen('profiles')});els.modalEvalBtn.addEventListener('click',()=>{els.modal.classList.remove('show');showEvaluation(activeKid?.id)});window.addEventListener('beforeunload',stopTimer);
+els.tabMath.addEventListener('click',openMathTab);els.tabOther.addEventListener('click',()=>{stopTimer();showScreen('other')});els.tabDraw.addEventListener('click',()=>{stopTimer();showScreen('draw')});els.smartFixBtn.addEventListener('click',()=>smartFixShape(false));els.fillShapeBtn.addEventListener('click',()=>smartFixShape(true));els.undoDrawBtn.addEventListener('click',undoDraw);els.clearDrawBtn.addEventListener('click',clearDraw);els.saveDrawingBtn.addEventListener('click',saveDrawing);els.downloadDrawingBtn.addEventListener('click',downloadDrawing);
 renderProfiles();renderHeaderTotals();
 </script>
 </body>
