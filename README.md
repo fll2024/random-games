@@ -1,19 +1,26 @@
-# Random Games Kids POC v9
+# Random Games Kids POC v10
 
-Static, ad-free kids game app for GitHub Pages.
+Static, ad-free kids games app for GitHub Pages.
 
-## What is included
+## Tabs
 
-- Math crossword puzzle with unlimited generated levels
-- Mobile-friendly tabs: Math, Other Games, Draw
-- Bottom number bar for phone play so the iOS/Android keyboard does not cover the puzzle
-- Auto-check after all boxes are filled
-- Congratulations popup, confetti, and local reward sound
-- Stars, score, best-time rewards, mistake-reduction rewards
-- Player profiles with local browser storage and cookie mirror
-- Evaluation page for mistakes by operation and number range
-- Drawing canvas with generic colors and simple smart shape correction
+- Math: crossword-style math puzzles with levels, timer, rewards, mistake tracking, and bottom number pad.
+- Words: spelling and phonics game using browser speech and a custom letter keyboard.
+- Draw: finger drawing canvas with simple shape correction and local saves.
 
-## Deploy on GitHub Pages
+## Words curriculum
 
-Upload `index.html` to the root of the repo and enable Pages from `main` / root.
+- Levels 1-5: simple spelling
+- Levels 6-10: beginning blends
+- Levels 11-15: ending blends
+- Levels 16-20: consonant digraphs
+- Levels 21-25: vowel digraphs
+- Levels 26-30: tri-blends
+- Levels 31-35: trigraphs
+- Levels 36-45: missing letters and sentence blanks
+- Levels 46+: mixed review
+- Levels 60+: quad-blends bonus
+
+## Hosting
+
+Upload `index.html` to the root of your GitHub Pages repo.
