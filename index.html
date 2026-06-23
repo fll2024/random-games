@@ -6,7 +6,13 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#6ee7b7" />
-  <title>Random Games Kids</title>
+  <title>Random Games Kids v11</title>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <link rel="manifest" href="site.webmanifest?v=11" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=11" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png?v=11" />
   <style>
     :root{
       --bg:#fff7ed;
@@ -69,6 +75,44 @@
       .app{padding-left:10px;padding-right:10px}.hero{align-items:flex-start}.logo{width:44px;height:44px;border-radius:16px}.subtitle{max-width:230px}.pill{font-size:13px;padding:7px 10px}.card{padding:13px;border-radius:22px}.profile-form{display:grid;grid-template-columns:1fr}.kid-card{align-items:flex-start}.kid-actions{width:100%;justify-content:flex-start}.kid-card{flex-wrap:wrap}.stats{grid-template-columns:repeat(2,1fr)}.stat{min-width:0;padding:8px 10px}.stat-value{font-size:18px}.top-bar>.btn{width:100%;}.level-row{align-items:flex-start}.difficulty{font-size:13px}.board-wrap{justify-content:start;place-items:start center}.cell{border-radius:9px}.actions{display:grid;grid-template-columns:1fr 1fr;width:100%}.actions .btn{width:100%;padding:0 10px}.actions .btn.danger,.actions .btn.purple{grid-column:auto}.modal-card{border-radius:24px}.eval-grid{grid-template-columns:1fr}.bar-row{grid-template-columns:72px 1fr 58px;font-size:13px}
     }
 
+
+    .game-tabs{
+      position:sticky;
+      top:calc(64px + env(safe-area-inset-top));
+      z-index:30;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:8px;
+      margin:0 0 14px;
+      padding:7px;
+      border-radius:22px;
+      background:rgba(255,255,255,.92);
+      border:2px solid rgba(148,163,184,.20);
+      box-shadow:var(--soft-shadow);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      pointer-events:auto;
+    }
+    .tab-btn{
+      min-height:50px;
+      border:0;
+      border-radius:17px;
+      background:#f8fafc;
+      color:#475569;
+      font-weight:950;
+      font-size:15px;
+      box-shadow:inset 0 -2px 0 rgba(100,116,139,.08);
+      touch-action:manipulation;
+      cursor:pointer;
+      pointer-events:auto;
+      -webkit-user-select:none;
+      user-select:none;
+    }
+    .tab-btn.active{background:linear-gradient(135deg,#bfdbfe,#bbf7d0,#fef3c7);color:#1f2937;box-shadow:0 5px 0 rgba(100,116,139,.16)}
+    .tab-btn:active{transform:translateY(2px)}
+    .version-pill{font-size:11px;color:var(--muted);font-weight:900;text-align:center;margin:-6px 0 12px}
+    @media(max-width:520px){.game-tabs{top:calc(62px + env(safe-area-inset-top));gap:6px;padding:6px}.tab-btn{min-height:48px;font-size:14px}}
+
     .number-pad{position:fixed;left:0;right:0;bottom:0;z-index:9;display:none;padding:10px max(10px,env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:2px solid rgba(148,163,184,.22);box-shadow:0 -12px 36px rgba(51,65,85,.16)}
     .number-pad.show{display:block}.number-pad-inner{width:min(100%,760px);margin:0 auto;display:grid;grid-template-columns:repeat(10,1fr);gap:7px;align-items:center}.num-btn{min-height:48px;border:0;border-radius:16px;background:linear-gradient(135deg,#e0f2fe,#fef3c7);color:#334155;font-weight:950;font-size:20px;box-shadow:0 5px 0 rgba(51,65,85,.14);touch-action:manipulation}.num-btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(51,65,85,.18)}.num-btn.action{font-size:14px;background:linear-gradient(135deg,#fce7f3,#ede9fe)}.num-help{grid-column:1/-1;text-align:center;color:var(--muted);font-size:12px;font-weight:850;margin-top:2px}.app.numberpad-open{padding-bottom:calc(34px + 112px + env(safe-area-inset-bottom))}
     @media(max-width:520px){.number-pad-inner{grid-template-columns:repeat(5,1fr)}.num-btn{min-height:46px}.app.numberpad-open{padding-bottom:calc(34px + 174px + env(safe-area-inset-bottom))}}
@@ -84,11 +128,12 @@
       <div class="pill" id="todayPill">⭐ 0</div>
     </header>
 
-    <nav class="game-tabs" aria-label="Game tabs">
-      <button id="tabMath" class="tab-btn active" type="button">🧮 Math</button>
-      <button id="tabOther" class="tab-btn" type="button">🔤 Words</button>
-      <button id="tabDraw" class="tab-btn" type="button">🎨 Draw</button>
+    <nav id="gameTabs" class="game-tabs" aria-label="Game tabs">
+      <button id="tabMath" data-tab="math" class="tab-btn active" type="button" onclick="openMathTab()">🧮 Math</button>
+      <button id="tabOther" data-tab="words" class="tab-btn" type="button" onclick="openWordsTab()">🔤 Words</button>
+      <button id="tabDraw" data-tab="draw" class="tab-btn" type="button" onclick="stopTimer(); showScreen('draw')">🎨 Draw</button>
     </nav>
+    <div class="version-pill">v11 · if this still shows an older version, Safari/GitHub Pages is cached</div>
 
     <section id="profileScreen" class="screen active">
       <div class="profile-layout">
@@ -236,7 +281,7 @@ const COOKIE_NAME='mathCrosswordKidsPocV3';
 const OLD_COOKIE_NAME='mathCrosswordKidsPocV2';
 const COOKIE_DAYS=365;
 const ICONS=['⭐','🌈','🎈','✨','🍎','🧩','🎯','🚀','🌼','☀️'];
-const els={profileScreen:byId('profileScreen'),gameScreen:byId('gameScreen'),evaluationScreen:byId('evaluationScreen'),profileForm:byId('profileForm'),kidNameInput:byId('kidNameInput'),kidList:byId('kidList'),noKids:byId('noKids'),todayPill:byId('todayPill'),playerName:byId('playerName'),timer:byId('timer'),stars:byId('stars'),score:byId('score'),levelTitle:byId('levelTitle'),levelGoal:byId('levelGoal'),difficulty:byId('difficulty'),message:byId('message'),board:byId('board'),checkBtn:byId('checkBtn'),clearBtn:byId('clearBtn'),newPuzzleBtn:byId('newPuzzleBtn'),resetLevelBtn:byId('resetLevelBtn'),speedNote:byId('speedNote'),backBtn:byId('backBtn'),evalFromGameBtn:byId('evalFromGameBtn'),evalBackBtn:byId('evalBackBtn'),evalPlayBtn:byId('evalPlayBtn'),evalPlayerPill:byId('evalPlayerPill'),evalTitle:byId('evalTitle'),evalSummary:byId('evalSummary'),insightBox:byId('insightBox'),opStats:byId('opStats'),rangeStats:byId('rangeStats'),levelHistory:byId('levelHistory'),recentMistakes:byId('recentMistakes'),clearMistakesBtn:byId('clearMistakesBtn'),modal:byId('winModal'),winStars:byId('winStars'),winCopy:byId('winCopy'),nextBtn:byId('nextBtn'),modalProfilesBtn:byId('modalProfilesBtn'),modalEvalBtn:byId('modalEvalBtn'),confetti:byId('confetti'),tabMath:byId('tabMath'),tabOther:byId('tabOther'),tabDraw:byId('tabDraw'),otherScreen:byId('otherScreen'),drawScreen:byId('drawScreen'),strokeColor:byId('strokeColor'),fillColor:byId('fillColor'),brushSize:byId('brushSize'),drawCanvas:byId('drawCanvas'),smartFixBtn:byId('smartFixBtn'),fillShapeBtn:byId('fillShapeBtn'),undoDrawBtn:byId('undoDrawBtn'),clearDrawBtn:byId('clearDrawBtn'),saveDrawingBtn:byId('saveDrawingBtn'),downloadDrawingBtn:byId('downloadDrawingBtn'),savedDrawings:byId('savedDrawings'),wordSkillPill:byId('wordSkillPill'),wordProfilesBtn:byId('wordProfilesBtn'),wordEvalBtn:byId('wordEvalBtn'),wordPlayerPill:byId('wordPlayerPill'),wordLevelTitle:byId('wordLevelTitle'),wordGoal:byId('wordGoal'),wordSentence:byId('wordSentence'),wordDisplay:byId('wordDisplay'),wordBlanks:byId('wordBlanks'),wordMessage:byId('wordMessage'),sayWordBtn:byId('sayWordBtn'),wordCheckBtn:byId('wordCheckBtn'),wordClearBtn:byId('wordClearBtn'),wordNextBtn:byId('wordNextBtn'),letterKeyboard:byId('letterKeyboard'),wordStatsBox:byId('wordStatsBox'),numberPad:byId('numberPad')};
+const els={profileScreen:byId('profileScreen'),gameScreen:byId('gameScreen'),evaluationScreen:byId('evaluationScreen'),profileForm:byId('profileForm'),kidNameInput:byId('kidNameInput'),kidList:byId('kidList'),noKids:byId('noKids'),todayPill:byId('todayPill'),playerName:byId('playerName'),timer:byId('timer'),stars:byId('stars'),score:byId('score'),levelTitle:byId('levelTitle'),levelGoal:byId('levelGoal'),difficulty:byId('difficulty'),message:byId('message'),board:byId('board'),checkBtn:byId('checkBtn'),clearBtn:byId('clearBtn'),newPuzzleBtn:byId('newPuzzleBtn'),resetLevelBtn:byId('resetLevelBtn'),speedNote:byId('speedNote'),backBtn:byId('backBtn'),evalFromGameBtn:byId('evalFromGameBtn'),evalBackBtn:byId('evalBackBtn'),evalPlayBtn:byId('evalPlayBtn'),evalPlayerPill:byId('evalPlayerPill'),evalTitle:byId('evalTitle'),evalSummary:byId('evalSummary'),insightBox:byId('insightBox'),opStats:byId('opStats'),rangeStats:byId('rangeStats'),levelHistory:byId('levelHistory'),recentMistakes:byId('recentMistakes'),clearMistakesBtn:byId('clearMistakesBtn'),modal:byId('winModal'),winStars:byId('winStars'),winCopy:byId('winCopy'),nextBtn:byId('nextBtn'),modalProfilesBtn:byId('modalProfilesBtn'),modalEvalBtn:byId('modalEvalBtn'),confetti:byId('confetti'),tabMath:byId('tabMath'),tabOther:byId('tabOther'),tabDraw:byId('tabDraw'),otherScreen:byId('otherScreen'),drawScreen:byId('drawScreen'),strokeColor:byId('strokeColor'),fillColor:byId('fillColor'),brushSize:byId('brushSize'),drawCanvas:byId('drawCanvas'),smartFixBtn:byId('smartFixBtn'),fillShapeBtn:byId('fillShapeBtn'),undoDrawBtn:byId('undoDrawBtn'),clearDrawBtn:byId('clearDrawBtn'),saveDrawingBtn:byId('saveDrawingBtn'),downloadDrawingBtn:byId('downloadDrawingBtn'),savedDrawings:byId('savedDrawings'),wordSkillPill:byId('wordSkillPill'),wordProfilesBtn:byId('wordProfilesBtn'),wordEvalBtn:byId('wordEvalBtn'),wordPlayerPill:byId('wordPlayerPill'),wordLevelTitle:byId('wordLevelTitle'),wordGoal:byId('wordGoal'),wordSentence:byId('wordSentence'),wordDisplay:byId('wordDisplay'),wordBlanks:byId('wordBlanks'),wordMessage:byId('wordMessage'),sayWordBtn:byId('sayWordBtn'),wordCheckBtn:byId('wordCheckBtn'),wordClearBtn:byId('wordClearBtn'),wordNextBtn:byId('wordNextBtn'),letterKeyboard:byId('letterKeyboard'),wordStatsBox:byId('wordStatsBox'),numberPad:byId('numberPad'),gameTabs:byId('gameTabs')};
 let state=loadState(); let activeKid=null; let puzzle=null; let timerId=null; let autoCheckTimer=null; let startMs=0; let elapsedSeconds=0; let mistakesThisRound=0; let roundSeed=0; let levelCompleteLocked=false; let lastAutoSignature=''; let activeInput=null;
 function byId(id){return document.getElementById(id)}
 function setCookie(name,value,days){const maxAge=days*24*60*60;document.cookie=`${name}=${encodeURIComponent(value)}; max-age=${maxAge}; path=/; SameSite=Lax`}
@@ -346,6 +391,48 @@ function drawCorrectedShape(shape,fill){const ctx=drawCtx;ctx.save();ctx.strokeS
 function saveDrawing(){initDrawCanvas();const kid=currentDrawKid();if(!kid){alert('Create or select a player first.');return}kid.drawings=kid.drawings||[];kid.drawings.unshift({data:els.drawCanvas.toDataURL('image/png'),ts:Date.now()});kid.drawings=kid.drawings.slice(0,8);state.activeKidId=kid.id;saveState();renderSavedDrawings();alert('Drawing saved for '+kid.name+'!')}
 function downloadDrawing(){initDrawCanvas();const a=document.createElement('a');a.href=els.drawCanvas.toDataURL('image/png');a.download='random-games-drawing.png';document.body.appendChild(a);a.click();a.remove()}
 function renderSavedDrawings(){if(!els.savedDrawings)return;const kid=currentDrawKid();const drawings=(kid&&kid.drawings)||[];els.savedDrawings.innerHTML='';if(!drawings.length){els.savedDrawings.innerHTML='<p class="empty-note">No drawings saved yet.</p>';return}drawings.forEach((d,i)=>{const div=document.createElement('div');div.className='drawing-thumb';div.innerHTML=`<img src="${d.data}" alt="Saved drawing ${i+1}"><button class="btn small blue" type="button" style="width:100%;margin-top:6px">Open</button>`;div.querySelector('button').addEventListener('click',()=>{initDrawCanvas();restoreDraw(d.data);pushDrawHistory()});els.savedDrawings.appendChild(div)})}
+
+
+const WORD_BANKS={
+  simple:['cat','dog','sun','run','jump','cake','bike','home','fish','tree','green','yellow','school','mother','basket'],
+  beginningBlends:['black','blue','clap','clock','flag','glass','plant','slide','bring','crab','drum','frog','green','truck','skate','smile','snake','spot','star','swim','twin','queen'],
+  endingBlends:['soft','left','gift','cold','hold','milk','silk','belt','melt','salt','help','gulp','jump','lamp','camp','hand','sand','pink','bank','tent','went','desk','mask','nest','best'],
+  consonantDigraphs:['chair','chip','ship','shop','thin','this','when','whale','phone','duck','rock','sing','ring','bank','pink'],
+  vowelDigraphs:['rain','train','play','day','tree','green','beach','team','boat','road','moon','book','cloud','brown','pie','blue','fruit'],
+  triBlends:['scrub','scream','spring','spray','street','strong','splash','split','squid','square','shrimp','shrink','three','throw'],
+  trigraphs:['match','catch','bridge','badge','light','night','ear','near','air','chair','care','share'],
+  sentence:['school','friend','because','people','family','garden','window','animal','breakfast','outside','favorite','together'],
+  quadBonus:['months','tenths','fourths','wealths']
+};
+const WORD_SENTENCES={school:'I go to ____ every day.',friend:'My ____ plays with me.',because:'I smiled ____ I was happy.',people:'Many ____ came to the park.',family:'My ____ eats dinner together.',garden:'The flowers grow in the ____.',window:'I looked out the ____.',animal:'A tiger is an ____.',breakfast:'I ate eggs for ____.',outside:'We played ____ after lunch.',favorite:'Blue is my ____ color.',together:'We read a book ____.'};
+let wordRound=null,wordStartedAt=0,wordMistakes=0;
+function getWordKid(){return activeKid||getKid(state.activeKidId)||state.kids[0]||null}
+function getWordRules(level){
+  if(level>=60)return{bank:'quadBonus',label:'Quad-blends bonus',mode:'missing',goal:'Bonus advanced words. Fill the missing letters.'};
+  if(level>=46)return{bank:'sentence',label:'Mixed review',mode:'mixed',goal:'Mixed review: spelling, missing letters, and sentence blanks.'};
+  if(level>=41)return{bank:'sentence',label:'Sentence blanks',mode:'sentence',goal:'Read the sentence and spell the missing word.'};
+  if(level>=36)return{bank:'sentence',label:'Missing letters',mode:'missing',goal:'Listen to the word and fill the missing letters.'};
+  if(level>=31)return{bank:'trigraphs',label:'Trigraphs',mode:'missing',goal:'Practice three letters making one sound.'};
+  if(level>=26)return{bank:'triBlends',label:'Tri-blends',mode:'spell',goal:'Practice beginning tri-blends where you hear all sounds.'};
+  if(level>=21)return{bank:'vowelDigraphs',label:'Vowel digraphs',mode:'spell',goal:'Practice vowel teams like ai, ay, ee, ea, oa, oo.'};
+  if(level>=16)return{bank:'consonantDigraphs',label:'Consonant digraphs',mode:'spell',goal:'Practice two letters making one sound: ch, sh, th, wh, ph, ck, ng, nk.'};
+  if(level>=11)return{bank:'endingBlends',label:'Ending blends',mode:'spell',goal:'Practice ending blends like ft, ld, lk, lt, lp, mp, nd, nk.'};
+  if(level>=6)return{bank:'beginningBlends',label:'Beginning blends',mode:'spell',goal:'Practice L, R, S, and W beginning blends.'};
+  return{bank:'simple',label:'Simple spelling',mode:'spell',goal:'Listen to the word, then tap the letters.'};
+}
+function ensureWordStats(kid){kid.wordLevel=kid.wordLevel||1;kid.wordStats=kid.wordStats||{attempts:0,correct:0,wrong:0,stars:0,totalSeconds:0,history:[],bySkill:{},missedWords:{},bestTimes:{},bestMistakes:{}};return kid.wordStats}
+function openWordsTab(){stopTimer();const kid=getWordKid();showScreen('other');if(!kid){els.wordPlayerPill.textContent='Create a player first';els.wordMessage.className='message bad';els.wordMessage.textContent='Go to Math/Profiles and create a player first.';renderLetterKeyboard([]);return}activeKid=kid;state.activeKidId=kid.id;saveState();startWordRound(false)}
+function chooseWord(kid,rules,advance){const bank=WORD_BANKS[rules.bank]||WORD_BANKS.simple;const seed=hashString(`${kid.id}:${kid.wordLevel}:${kid.wordSalt||0}:${advance?'n':'s'}:words-v11`);const rng=mulberry32(seed);return pick(rng,bank)}
+function startWordRound(advanceSalt=false){const kid=getWordKid();if(!kid){openWordsTab();return}activeKid=kid;const stats=ensureWordStats(kid);if(advanceSalt){kid.wordSalt=(kid.wordSalt||0)+1;saveState()}const level=kid.wordLevel||1;const rules=getWordRules(level);let mode=rules.mode;if(mode==='mixed'){const modes=['spell','missing','sentence'];mode=modes[(level+(kid.wordSalt||0))%modes.length]}const word=chooseWord(kid,rules,advanceSalt).toLowerCase();let locked={};if(mode==='missing'){for(let i=0;i<word.length;i++){if(i===0||i===word.length-1||Math.random()<.28)locked[i]=word[i]}if(Object.keys(locked).length>=word.length)delete locked[1]}wordRound={word,mode,rules,locked,entry:Array(word.length).fill(''),started:false};for(const [i,ch] of Object.entries(locked))wordRound.entry[Number(i)]=ch;wordMistakes=0;wordStartedAt=Date.now();renderWordRound();setTimeout(()=>sayWord(),250)}
+function renderWordRound(){const kid=getWordKid();if(!kid||!wordRound)return;els.wordPlayerPill.textContent=`${kid.name} · ⭐ ${kid.totalStars||0}`;els.wordLevelTitle.textContent=`Word Level ${kid.wordLevel||1}`;els.wordSkillPill.textContent=wordRound.rules.label;els.wordGoal.textContent=wordRound.rules.goal;els.wordSentence.classList.toggle('hidden',wordRound.mode!=='sentence');els.wordSentence.textContent=wordRound.mode==='sentence'?(WORD_SENTENCES[wordRound.word]||'Spell the missing word: ____'):'';els.wordDisplay.textContent=wordRound.mode==='sentence'?'Complete the sentence':'🔊 Listen and spell';els.wordBlanks.innerHTML='';wordRound.entry.forEach((ch,i)=>{const slot=document.createElement('div');slot.className='letter-slot'+(wordRound.locked[i]?' locked':'');slot.textContent=ch?ch.toUpperCase():'_';els.wordBlanks.appendChild(slot)});els.wordMessage.className='message';els.wordMessage.textContent='Tap Say word, then use the alphabet keyboard.';renderLetterKeyboard(makeLetterChoices(wordRound.word))}
+function makeLetterChoices(word){const letters='abcdefghijklmnopqrstuvwxyz'.split('');if((getWordKid()?.wordLevel||1)<=10){const needed=[...new Set(word.split(''))];const extra=letters.filter(l=>!needed.includes(l)).slice(0,10-needed.length);return needed.concat(extra).sort()}return letters}
+function renderLetterKeyboard(letters){els.letterKeyboard.innerHTML='';letters.forEach(l=>{const b=document.createElement('button');b.type='button';b.className='letter-btn';b.dataset.letter=l;b.textContent=l.toUpperCase();els.letterKeyboard.appendChild(b)});['⌫','Clear'].forEach(label=>{const b=document.createElement('button');b.type='button';b.className='letter-btn action';b.dataset.action=label==='⌫'?'back':'clear';b.textContent=label;els.letterKeyboard.appendChild(b)})}
+function sayWord(){if(!wordRound)return;try{window.speechSynthesis.cancel();const msg=new SpeechSynthesisUtterance(wordRound.word);msg.rate=.82;msg.pitch=1.05;msg.lang='en-US';window.speechSynthesis.speak(msg)}catch(e){}els.wordMessage.className='message good';els.wordMessage.textContent=`Listen carefully, then spell the word.`}
+function addWordLetter(l){if(!wordRound)return;const idx=wordRound.entry.findIndex((ch,i)=>!wordRound.locked[i]&&!ch);if(idx<0)return;wordRound.entry[idx]=l;renderWordRound();const remaining=wordRound.entry.some((ch,i)=>!wordRound.locked[i]&&!ch);if(!remaining)setTimeout(checkWord,350)}
+function backspaceWord(){if(!wordRound)return;for(let i=wordRound.entry.length-1;i>=0;i--){if(!wordRound.locked[i]&&wordRound.entry[i]){wordRound.entry[i]='';break}}renderWordRound()}
+function clearWordEntry(){if(!wordRound)return;wordRound.entry=wordRound.entry.map((ch,i)=>wordRound.locked[i]?wordRound.word[i]:'');renderWordRound()}
+function checkWord(){const kid=getWordKid();if(!kid||!wordRound)return;const answer=wordRound.entry.join('').toLowerCase();if(answer.length<wordRound.word.length||answer.includes('')){els.wordMessage.className='message bad';els.wordMessage.textContent='Fill all the letters first.';return}const stats=ensureWordStats(kid);stats.attempts++;const seconds=Math.max(1,Math.floor((Date.now()-wordStartedAt)/1000));const skill=wordRound.rules.label;stats.bySkill[skill]=stats.bySkill[skill]||{attempts:0,correct:0,wrong:0};stats.bySkill[skill].attempts++;if(answer!==wordRound.word){wordMistakes++;stats.wrong++;stats.bySkill[skill].wrong++;stats.missedWords[wordRound.word]=(stats.missedWords[wordRound.word]||0)+1;saveState();els.wordMessage.className='message bad';els.wordMessage.textContent='Almost — try again. Tap 🔊 to hear it again.';Array.from(els.wordBlanks.children).forEach((slot,i)=>slot.classList.toggle('wrong',answer[i]!==wordRound.word[i]));return}stats.correct++;stats.bySkill[skill].correct++;stats.totalSeconds+=seconds;let stars=wordMistakes===0?3:wordMistakes===1?2:1;const key=`${skill}:${wordRound.word}`;const oldBest=stats.bestTimes[key];const oldMistakes=stats.bestMistakes[key];let bonus=0,bits=[];if(oldBest&&seconds<oldBest){bonus++;bits.push('🏃 new best time +1 star')}if(oldMistakes!==undefined&&wordMistakes<oldMistakes){bonus++;bits.push('🎯 fewer mistakes +1 star')}stats.bestTimes[key]=oldBest?Math.min(oldBest,seconds):seconds;stats.bestMistakes[key]=oldMistakes===undefined?wordMistakes:Math.min(oldMistakes,wordMistakes);const earned=stars+bonus;kid.totalStars=(kid.totalStars||0)+earned;kid.score=(kid.score||0)+earned*75+Math.max(0,60-seconds)*2;kid.wordLevel=(kid.wordLevel||1)+1;kid.wordSalt=0;stats.stars=(stats.stars||0)+earned;stats.history.push({word:wordRound.word,skill,seconds,mistakes:wordMistakes,stars,bonus,ts:Date.now()});stats.history=stats.history.slice(-100);saveState();launchConfetti();playRewardSound();byId('winTitle').textContent=`Congratulations ${kid.name}!!!`;els.winStars.textContent='⭐'.repeat(Math.min(3,stars))+'☆'.repeat(Math.max(0,3-stars));els.winCopy.textContent=`You spelled “${wordRound.word}” correctly in ${formatTime(seconds)}. Earned ${earned} star${earned===1?'':'s'}!`+(bits.length?' '+bits.join(' · '):'');els.modal.classList.add('show');renderWordRound()}
+
 function openMathTab(){const kid=getKid(state.activeKidId);if(kid)startGame(kid.id);else{renderProfiles();showScreen('profiles')}}
 
 els.profileForm.addEventListener('submit',e=>{e.preventDefault();const name=els.kidNameInput.value.trim();if(!name)return;const kid=kidTemplate(name);state.kids.push(kid);state.activeKidId=kid.id;els.kidNameInput.value='';saveState();renderProfiles();startGame(kid.id)});
@@ -353,7 +440,8 @@ els.backBtn.addEventListener('click',()=>{stopTimer();renderProfiles();showScree
 els.nextBtn.addEventListener('click',()=>{els.modal.classList.remove('show'); if(els.otherScreen.classList.contains('active'))startWordRound(true); else newRound()});els.modalProfilesBtn.addEventListener('click',()=>{els.modal.classList.remove('show');stopTimer();renderProfiles();showScreen('profiles')});els.modalEvalBtn.addEventListener('click',()=>{els.modal.classList.remove('show');showEvaluation(activeKid?.id)});window.addEventListener('beforeunload',stopTimer);
 
 els.numberPad.addEventListener('click',e=>{const btn=e.target.closest('button');if(!btn)return;const digit=btn.dataset.num;const action=btn.dataset.action;if(digit!==undefined){applyDigitToActive(digit);return}if(action==='back')backspaceActive();else if(action==='clear')clearActiveInput();else if(action==='next'){const next=getNextInput(activeInput);if(next)selectAnswerInput(next)}else if(action==='check')checkAnswers();else if(action==='hide'){document.querySelector('.cell.blank.selected')?.classList.remove('selected');activeInput=null}});
-els.wordProfilesBtn.addEventListener('click',()=>{renderProfiles();showScreen('profiles')});els.wordEvalBtn.addEventListener('click',()=>showEvaluation(getWordKid()&&getWordKid().id));els.sayWordBtn.addEventListener('click',sayWord);els.wordCheckBtn.addEventListener('click',checkWord);els.wordClearBtn.addEventListener('click',clearWordEntry);els.wordNextBtn.addEventListener('click',()=>startWordRound(true));els.tabMath.addEventListener('click',openMathTab);els.tabOther.addEventListener('click',openWordsTab);els.tabDraw.addEventListener('click',()=>{stopTimer();showScreen('draw')});els.smartFixBtn.addEventListener('click',()=>smartFixShape(false));els.fillShapeBtn.addEventListener('click',()=>smartFixShape(true));els.undoDrawBtn.addEventListener('click',undoDraw);els.clearDrawBtn.addEventListener('click',clearDraw);els.saveDrawingBtn.addEventListener('click',saveDrawing);els.downloadDrawingBtn.addEventListener('click',downloadDrawing);
+els.letterKeyboard.addEventListener('click',e=>{const btn=e.target.closest('button');if(!btn)return;if(btn.dataset.letter)addWordLetter(btn.dataset.letter);else if(btn.dataset.action==='back')backspaceWord();else if(btn.dataset.action==='clear')clearWordEntry()});
+els.wordProfilesBtn.addEventListener('click',()=>{renderProfiles();showScreen('profiles')});els.wordEvalBtn.addEventListener('click',()=>showEvaluation(getWordKid()&&getWordKid().id));els.sayWordBtn.addEventListener('click',sayWord);els.wordCheckBtn.addEventListener('click',checkWord);els.wordClearBtn.addEventListener('click',clearWordEntry);els.wordNextBtn.addEventListener('click',()=>startWordRound(true));els.tabMath.addEventListener('click',openMathTab,{passive:true});els.tabOther.addEventListener('click',openWordsTab,{passive:true});els.tabDraw.addEventListener('click',()=>{stopTimer();showScreen('draw')},{passive:true});if(els.gameTabs){els.gameTabs.addEventListener('touchend',(e)=>{const b=e.target.closest('[data-tab]');if(!b)return;e.preventDefault();if(b.dataset.tab==='math')openMathTab();else if(b.dataset.tab==='words')openWordsTab();else if(b.dataset.tab==='draw'){stopTimer();showScreen('draw')}},{passive:false});els.gameTabs.addEventListener('click',(e)=>{const b=e.target.closest('[data-tab]');if(!b)return;if(b.dataset.tab==='math')openMathTab();else if(b.dataset.tab==='words')openWordsTab();else if(b.dataset.tab==='draw'){stopTimer();showScreen('draw')}})}els.smartFixBtn.addEventListener('click',()=>smartFixShape(false));els.fillShapeBtn.addEventListener('click',()=>smartFixShape(true));els.undoDrawBtn.addEventListener('click',undoDraw);els.clearDrawBtn.addEventListener('click',clearDraw);els.saveDrawingBtn.addEventListener('click',saveDrawing);els.downloadDrawingBtn.addEventListener('click',downloadDrawing);
 renderProfiles();renderHeaderTotals();
 </script>
 </body>

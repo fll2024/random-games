@@ -1,26 +1,18 @@
-# Random Games Kids POC v10
+# Random Games Kids POC v11
 
-Static, ad-free kids games app for GitHub Pages.
+Static GitHub Pages app for personal kids games.
 
-## Tabs
+## Files to upload to GitHub repo root
 
-- Math: crossword-style math puzzles with levels, timer, rewards, mistake tracking, and bottom number pad.
-- Words: spelling and phonics game using browser speech and a custom letter keyboard.
-- Draw: finger drawing canvas with simple shape correction and local saves.
+- `index.html`
+- `site.webmanifest`
+- `apple-touch-icon.png`
+- `icon-192.png`
+- `icon-512.png`
 
-## Words curriculum
+## Notes
 
-- Levels 1-5: simple spelling
-- Levels 6-10: beginning blends
-- Levels 11-15: ending blends
-- Levels 16-20: consonant digraphs
-- Levels 21-25: vowel digraphs
-- Levels 26-30: tri-blends
-- Levels 31-35: trigraphs
-- Levels 36-45: missing letters and sentence blanks
-- Levels 46+: mixed review
-- Levels 60+: quad-blends bonus
-
-## Hosting
-
-Upload `index.html` to the root of your GitHub Pages repo.
+- v11 adds prominent Safari-friendly tabs.
+- v11 adds home-screen app icons.
+- Open with `?v=11` once after upload to bypass Safari/GitHub Pages cache:
+  `https://fll2024.github.io/random-games/?v=11`
